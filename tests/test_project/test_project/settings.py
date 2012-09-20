@@ -151,4 +151,4 @@ LOGGING = {
 
 EMAIL_BACKEND = 'rq_mail.backends.RqBackend'
 
-NORMAL_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+RQ_MAIL_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

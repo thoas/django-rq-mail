@@ -1,6 +1,6 @@
 from django.core.mail.backends.base import BaseEmailBackend
 
-from rq_mail.worker import queue_manager
+from rq_mail.queue import queue_manager
 
 
 class RqBackend(BaseEmailBackend):

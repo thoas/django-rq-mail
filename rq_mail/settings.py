@@ -12,9 +12,9 @@ CONNECTION = getattr(settings,
 
 MAX_ERRORS = getattr(settings, 'RQ_MAIL_MAX_ERRORS', 5)
 
-DELTAS = getattr(settings, 'RQ_MAIL_DELTAS', {
-    1: 5,
-    2: 15,
-    3: 30,
-    4: 60
-})
+FALLBACK_STEPS = getattr(settings, 'RQ_MAIL_FALLBACK_STEPS', [
+    300,
+    900,
+    1800,
+    3600
+])
