@@ -4,7 +4,8 @@ from rq_mail import settings
 
 
 def manage_message(message, *args, **kwargs):
-    message.connection = get_connection(settings.EMAIL_BACKEND, fail_silently=False)
+    message.connection = get_connection(settings.EMAIL_BACKEND,
+                                        fail_silently=False)
 
     try:
         message.send(fail_silently=False)

@@ -22,7 +22,10 @@ def add_prefix(name):
 
 def get_waiting_queues(steps, connection=None):
     """Returns a handle to the special waiting queue."""
-    return [WaitingQueue(name=add_prefix('waiting:%s' % step), connection=connection, step=step) for step in steps]
+    return [WaitingQueue(name=add_prefix('waiting:%s' % step),
+                         connection=connection,
+                         step=step)
+            for step in steps]
 
 
 def get_main_queue(connection=None):

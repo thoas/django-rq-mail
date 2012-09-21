@@ -88,4 +88,6 @@ class Dispatcher(Worker):
 
         self.log.warning('Moving job to %s queue.' % waiting_queue.name)
 
-        waiting_queue.quarantine(job, exc_info=exc_string, timestamp=time.time() + waiting_queue.step)
+        waiting_queue.quarantine(job,
+                                 exc_info=exc_string,
+                                 timestamp=time.time() + waiting_queue.step)
