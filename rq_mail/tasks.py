@@ -14,7 +14,6 @@ def manage_message(message, *args, **kwargs):
 
     try:
         message.send(fail_silently=False)
-        raise Exception('test')
     except Exception, e:
         message.connection = None
 
