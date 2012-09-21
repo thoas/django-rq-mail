@@ -42,7 +42,7 @@ def manage_message(message, *args, **kwargs):
             waiting_queue = get_waiting_queue(connection=queue_manager.connection)
             waiting_queue.enqueue(manage_message,
                                   args=(message,),
-                                  timestamp=int(time.time()) + settings.FALLBACK_STEPS[level])
+                                  timestamp=time.time() + settings.FALLBACK_STEPS[level])
 
         queue_manager.logger.error('[%s] Email (%s) cannot be send [%s] to %s: %s' % (
             datetime.now(),
