@@ -31,13 +31,10 @@ def manage_message(message, *args, **kwargs):
                                  message)
 
         else:
-            level = len(message.errors)
+            level = len(message.errors) - 1
 
             error_message = '%s times, will retry %s times!' % (len(message.errors),
                                                                 queue_manager.max_errors - level)
-
-            if level > queue_manager.max_errors - 1:
-                level = queue_manager.max_errors - 1
 
             waiting_queue = get_waiting_queue(connection=queue_manager.connection)
             waiting_queue.enqueue(manage_message,

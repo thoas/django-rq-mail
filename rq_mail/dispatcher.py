@@ -45,7 +45,6 @@ class Dispatcher(Worker):
                     for job, queue in result:
                         self.state = 'busy'
 
-                        job, queue = result
                         self.log.info('%s: %s (%s)' % (green(queue.name),
                                                        blue(job.description), job.id))
 

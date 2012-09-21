@@ -129,6 +129,8 @@ class WaitingQueue(Queue):
             values = connection.zrevrangebyscore(queue_key, timestamp, 0)
 
             if values:
+                connection.zremrangebyscore(queue_key, 0, timestamp)
+
                 yield queue_key, values
 
     @classmethod
