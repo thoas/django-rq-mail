@@ -131,8 +131,6 @@ class WaitingQueue(Queue):
             if values:
                 yield queue_key, values
 
-        return None
-
     @classmethod
     def dequeue_any(cls, queues, blocking, connection=None):
         """Class method returning the Job instance at the front of the given
