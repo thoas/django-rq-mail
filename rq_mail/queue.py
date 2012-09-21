@@ -11,22 +11,34 @@ from rq.job import Job, Status
 from rq.exceptions import UnpickleError, NoSuchJobError
 from rq.connections import resolve_connection
 
-from redis.client import Redis
-
 from rq_mail import settings
 
 logger = Logger(__name__)
 
 
-def get_waiting_queue(connection=None):
+def add_prefix(name):
+    return settings.PREFIX + name
+
+
+def get_waiting_queues(steps, connection=None):
     """Returns a handle to the special waiting queue."""
-    return WaitingQueue(connection=connection)
+    return [WaitingQueue(name=add_prefix('waiting:%s' % step), connection=connection, step=step) for step in steps]
+
+
+def get_main_queue(connection=None):
+    return WaitingQueue(name=add_prefix('main'), connection=connection)
+
+
+def enqueue(func, *args, **kwargs):
+    get_main_queue(connection=kwargs.pop('connection', None)).enqueue(func, *args, **kwargs)
 
 
 class WaitingQueue(Queue):
-    def __init__(self, name='waiting', *args, **kwargs):
+    def __init__(self, name='waiting', step=0, *args, **kwargs):
 
-        self._default_timestamp = kwargs.pop('default_timestamp', 0)
+        self._default_timestamp = kwargs.pop('default_timestamp', 0.0)
+
+        self.step = step
 
         super(WaitingQueue, self).__init__(name, *args, **kwargs)
 
@@ -100,6 +112,9 @@ class WaitingQueue(Queue):
         else:
             job.timeout = 180  # default
 
+        if not timestamp:
+            timestamp = self._default_timestamp
+
         if self._async:
             job.save()
             self.push_job_id(job.id, timestamp)
@@ -162,32 +177,14 @@ class WaitingQueue(Queue):
                 else:
                     yield job, queue
 
+    def quarantine(self, job, exc_info, **kwargs):
+        """Puts the given Job in quarantine (i.e. put it on the failed
+        queue).
 
-class QueueManager(object):
-    def __init__(self, default, max_errors, logger, prefix, connection=None):
-        self.max_errors = max_errors
-        self.connection = connection
-
-        self.logger = logger
-        self.prefix = prefix
-
-        self.default_key = self.add_prefix(default)
-
-        self._load_queue()
-
-    def _load_queue(self):
-        self.queue = Queue(name=self.default_key, connection=self.connection)
-
-    def add(self, message):
-        from .tasks import manage_message
-
-        self.queue.enqueue(manage_message, args=(message,))
-
-    def add_prefix(self, name):
-        return self.prefix + name
-
-queue_manager = QueueManager(default=settings.DEFAULT_QUEUE,
-                             max_errors=settings.MAX_ERRORS,
-                             logger=logger,
-                             prefix=settings.PREFIX,
-                             connection=Redis(**settings.CONNECTION))
+        This is different from normal job enqueueing, since certain meta data
+        must not be overridden (e.g. `origin` or `enqueued_at`) and other meta
+        data must be inserted (`ended_at` and `exc_info`).
+        """
+        job.ended_at = times.now()
+        job.exc_info = exc_info
+        return self.enqueue_job(job, timeout=job.timeout, set_meta_data=False, **kwargs)
