@@ -10,28 +10,29 @@ As django-rq-mail is based on rq_, it's entirely backed by Redis_.
 Architecture
 ------------
 
-django-rq-mail adds new elements to enjoy features from Redis_
-like `Sorted Sets <http://redis.io/commands#sorted_set>`_.
+django-rq-mail adds new elements to enjoy `Sorted Sets <http://redis.io/commands#sorted_set>`_
+from Redis_.
 
 For the purpose of django-rq-mail, it implements the concept of ``WaitingQueue``
 which delays the processing of a job with a timestamp.
 
-The default behavior of rq_ is to process jobs via ``BLPOP`` command of redis which
+The default behavior of rq_ is to process jobs via `BLPOP <http://redis.io/commands/blpop>`_ which
 blocks the connection when there are no elements to pop from any of the given queues.
-With this behavior there is no way to delays the processing of job and when it's failing
+With this behavior there is no way to delays the processing of a job and when it's failing
 rq_ pushs it in a failed queue.
 Of course, you can requeue this job later but there is no fallback mechanism.
 
 In django-rq-mail you can define fallback steps (in seconds) to retry a job until 
-it's not failing and when a job has been tested on each steps we reintroduce
+it's not failing. When a job has been tested on each steps we reintroduce
 the default behavior of rq_ on pushing it in the failed queue.
+
 Each steps will create a waiting queue and when a job is failing we take the
 current timestamp with the delta to retry it in the future.
 
 .. image:: http://yuml.me/895ce159
 
-This mechanism is possible with `ZADD <http://redis.io/commands/zadd>`_ to
-add a serialized job in the queue with a score and `ZREVRANGEBYSCORE <http://redis.io/commands/zrevrangebyscore>`_ 
+This mechanism is possible with `ZADD <http://redis.io/commands/zadd>`_ which
+adds a serialized job in the queue with a score and `ZREVRANGEBYSCORE <http://redis.io/commands/zrevrangebyscore>`_ 
 to return all the elements in the sorted set with a score between max (current timestamp) and min.
 
 As you may understood, we have dropped the default blocking behavior
@@ -61,7 +62,7 @@ This command is a minimal integration of rq_ into Django_ to launch the
 
        EMAIL_BACKEND = 'rq_mail.backends.RqBackend'
 
-4. Define ``RQ_MAIL_EMAIL_BACKEND`` which is the default behavior to send your emails, for example ::
+4. Define ``RQ_MAIL_EMAIL_BACKEND`` the backend used to send your emails, for example ::
 
        RQ_MAIL_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -112,8 +113,9 @@ The Redis password used to connect.
 ``RQ_MAIL_FALLBACK_STEPS``
 ..........................
 
-A simple list of timing to create waiting queues, you can define as much steps
-as you want, each will be transformed by a queue.
+A simple list of timing to create waiting queues.
+
+You can define as much steps as you want, each will be transformed to a queue.
 So if you define 10 steps, you will allow a message to fail 10 times until it
 will go in the failed queue.
 
