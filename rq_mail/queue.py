@@ -29,7 +29,7 @@ def get_waiting_queues(steps, connection=None):
 
 
 def get_main_queue(connection=None):
-    return WaitingQueue(name=add_prefix('main'), connection=connection)
+    return WaitingQueue(name=add_prefix(settings.DEFAULT_QUEUE), connection=connection)
 
 
 def enqueue(func, *args, **kwargs):
