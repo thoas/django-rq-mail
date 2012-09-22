@@ -2,7 +2,7 @@
 django-rq-mail
 ==============
 
-django-rq-mail is a simple Python library based on rq_ to store email sent
+django-rq-mail is a simple Python library based on rq_ to store emails sent
 by Django_ and process them in the background with workers.
 
 As django-rq-mail is based on rq_, it's entirely backed by Redis_.
@@ -10,13 +10,13 @@ As django-rq-mail is based on rq_, it's entirely backed by Redis_.
 Architecture
 ------------
 
-django-rq-mail is not entirely based on rq_ and add new elements to enjoy
-features from Redis_ like `Sorted Sets <http://redis.io/commands#sorted_set>`_.
+django-rq-mail adds new elements to enjoy features from Redis_
+like `Sorted Sets <http://redis.io/commands#sorted_set>`_.
 
-For the purpose of django-rq-mail, it implements the concept of `WaitingQueue`
+For the purpose of django-rq-mail, it implements the concept of ``WaitingQueue``
 which delays the processing of a job with a timestamp.
 
-The default behavior of rq_ is to process jobs via `BLPOP` command of redis which
+The default behavior of rq_ is to process jobs via ``BLPOP`` command of redis which
 blocks the connection when there are no elements to pop from any of the given queues.
 With this behavior there is no way to delays the processing of job and when it's failing
 rq_ pushs it in a failed queue.
@@ -52,10 +52,10 @@ Installation
            'rq_mail',
        )
 
-    to use the `rq_mail` command (via Django commandline) shipped by django-rq-mail.
+to use the `rq_mail` command (via Django commandline) shipped by django-rq-mail.
 
-    This command is a minimal integration of rq_ into Django_ to launch the
-    **Dispatcher**.
+This command is a minimal integration of rq_ into Django_ to launch the
+**Dispatcher**.
 
 3. Define ``EMAIL_BACKEND`` ::
 
@@ -69,7 +69,7 @@ Installation
 Utilisation
 -----------
 
-Once you have installed it, you can run `python manage.py rq_mail` from your shell.
+Once you have installed it, you can run ``python manage.py rq_mail`` from your shell.
 
 Configuration
 -------------
