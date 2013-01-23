@@ -5,6 +5,7 @@ from rq.worker import Worker, green, blue, StopRequested
 from rq.exceptions import UnpickleError
 
 from rq_mail.queue import WaitingQueue
+from rq_mail import __version__
 
 
 class Dispatcher(Worker):
@@ -18,7 +19,7 @@ class Dispatcher(Worker):
 
         did_perform_work = False
         self.register_birth()
-        self.log.info('RQ dispatcher started')
+        self.log.info('RQ dispatcher started, version %s' % __version__)
         self.state = 'starting'
         qnames = self.queue_names()
         self.procline('Listening on %s' % ','.join(qnames))

@@ -22,7 +22,7 @@ With this behavior there is no way to delays the processing of a job and when it
 rq_ pushs it in a failed queue.
 Of course, you can requeue this job later but there is no fallback mechanism.
 
-In django-rq-mail you can define fallback steps (in seconds) to retry a job until 
+In django-rq-mail you can define fallback steps (in seconds) to retry a job until
 it's not failing. When a job has been tested on each steps we reintroduce
 the default behavior of rq_ on pushing it in the failed queue.
 
@@ -32,7 +32,7 @@ current timestamp with the delta to retry it in the future.
 .. image:: http://yuml.me/895ce159
 
 This mechanism is possible with `ZADD <http://redis.io/commands/zadd>`_ which
-adds a serialized job in the queue with a score and `ZREVRANGEBYSCORE <http://redis.io/commands/zrevrangebyscore>`_ 
+adds a serialized job in the queue with a score and `ZREVRANGEBYSCORE <http://redis.io/commands/zrevrangebyscore>`_
 to return all the elements in the sorted set with a score between max (current timestamp) and min.
 
 As you may understood, we have dropped the default blocking behavior
@@ -66,6 +66,39 @@ This command is a minimal integration of rq_ into Django_ to launch the
 
        RQ_MAIL_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+Logging
+-------
+
+RQ 0.3.3 uses standard Python's ``logging``, this means
+you can easily configure ``rqworker``'s logging mechanism in django's
+``settings.py``. For example:
+
+.. code-block:: python
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'rq_console': {
+                'format': '%(asctime)s %(message)s',
+                'datefmt': '%H:%M:%S',
+            },
+        },
+        'handlers': {
+            'rq_console': {
+                'level': 'DEBUG',
+                'class': 'rq.utils.ColorizingStreamHandler',
+                'formatter': 'rq_console',
+                'exclude': ['%(asctime)s'],
+            },
+        },
+        'loggers': {
+            'rq.worker': {
+                'handlers': ['rq_console'],
+                'level': 'DEBUG'
+            },
+        }
+    }
 
 Utilisation
 -----------
