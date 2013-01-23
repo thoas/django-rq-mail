@@ -14,6 +14,8 @@ def _get_connection():
         'host': settings.REDIS_HOST,
         'port': settings.REDIS_PORT,
         'db': settings.REDIS_DB,
+        'url': settings.REDIS_URL,
+        'password': settings.REDIS_PASSWORD,
     })())
 
     return get_current_connection()
