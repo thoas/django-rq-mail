@@ -127,7 +127,9 @@ class WaitingQueue(Queue):
         return job
 
     def push_job_id(self, job_id, timestamp):
-        self.connection.zadd(self.key, job_id, timestamp)
+        self.connection.zadd(self.key, **{
+            job_id: timestamp
+        })
 
     @classmethod
     def lpop(cls, queue_keys, blocking, connection=None):

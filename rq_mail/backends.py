@@ -24,8 +24,10 @@ def _get_connection():
 class RqBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
 
+        connection = get_connection()
+
         for message in email_messages:
-            enqueue(manage_message, message, connection=get_connection())
+            enqueue(manage_message, message, connection=connection)
 
         return len(email_messages)
 
