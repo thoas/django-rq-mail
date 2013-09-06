@@ -16,6 +16,7 @@ def _get_connection():
         'db': settings.REDIS_DB,
         'url': settings.REDIS_URL,
         'password': settings.REDIS_PASSWORD,
+        'socket': ''
     })())
 
     return get_current_connection()
