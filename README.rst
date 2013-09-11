@@ -148,6 +148,11 @@ The Redis password used to connect.
 
 The Redis url used to connect.
 
+``RQ_MAIL_REDIS_SOCKET``
+..........................
+
+The Redis socket used to connect.
+
 ``RQ_MAIL_FALLBACK_STEPS``
 ..........................
 

@@ -11,6 +11,7 @@ REDIS_PORT = getattr(settings, 'RQ_MAIL_REDIS_PORT', 6379)
 REDIS_PASSWORD = getattr(settings, 'RQ_MAIL_REDIS_PASSWORD', None)
 REDIS_DB = getattr(settings, 'RQ_MAIL_REDIS_DB', 0)
 REDIS_URL = getattr(settings, 'RQ_MAIL_REDIS_URL', None)
+REDIS_SOCKET = getattr(settings, 'RQ_MAIL_REDIS_SOCKET', None)
 
 FALLBACK_STEPS = getattr(settings, 'RQ_MAIL_FALLBACK_STEPS', [
     300,
