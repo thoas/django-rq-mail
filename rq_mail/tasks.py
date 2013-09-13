@@ -12,3 +12,5 @@ def manage_message(message, *args, **kwargs):
     except Exception, e:
         message.connection = None
         raise e
+    else:
+        message.connection = None

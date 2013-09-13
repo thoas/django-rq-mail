@@ -28,6 +28,8 @@ class RqBackend(BaseEmailBackend):
         connection = get_connection()
 
         for message in email_messages:
+            message.connection = None
+
             enqueue(manage_message, message, connection=connection)
 
         return len(email_messages)
