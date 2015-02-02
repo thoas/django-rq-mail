@@ -2,6 +2,8 @@
 django-rq-mail
 ==============
 
+**This project is not maintained anymore, it doesn't support latest changes from rq**
+
 django-rq-mail is a simple Python library based on rq_ to store emails sent
 by Django_ and process them in the background with workers.
 
